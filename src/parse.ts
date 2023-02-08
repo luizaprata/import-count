@@ -87,9 +87,10 @@ export const parsePath = async (
   const importSourceCode = sourceCode
     // eslint-disable-next-line no-useless-escape
     .match(/import (?![\(\/])(?!type)(?!React)([\s\S]*?)(?=;).*/g)
-    ?.join('');
+    ?.filter((str) => str.includes('@gupy'))
+    .join('');
 
-  // console.error(`path:"${path}"\n${importSourceCode}\n\n`);
+  console.error(`>"${path}"\n${importSourceCode}\n\n`);
 
   const root = Parser.parse(importSourceCode ? importSourceCode : '', {
     ecmaVersion: 'latest',

@@ -14,7 +14,7 @@ export const importsAsText = (importCounts: ImportCount[]) => {
 
 export const filesAsText = (fileCounts: FileCount[]) => {
   return fileCounts.map((fileCount) => {
-    return `${fileCount.path};${fileCount.count}`;
+    return `${fileCount.path}: ${fileCount.count}`;
   });
 };
 

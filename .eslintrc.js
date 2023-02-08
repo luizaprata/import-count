@@ -10,6 +10,7 @@ const config = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
+  ignorePatterns: ['public/*'],
 };
 
 module.exports = config;
