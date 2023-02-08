@@ -1,15 +1,15 @@
-import { readFile } from "fs/promises";
-import { dirname, resolve } from "path";
+import { readFile } from 'fs/promises';
+import { dirname, resolve } from 'path';
 
-import { Parser as BaseParser } from "acorn";
-import acornJsx from "acorn-jsx";
-import type { Program } from "estree";
+import { Parser as BaseParser } from 'acorn';
+import acornJsx from 'acorn-jsx';
+import type { Program } from 'estree';
 
-import Counter from "./count";
+import Counter from './count';
 
 export interface Ident {
   ident: string;
-  kind: "named" | "default" | "namespace";
+  kind: 'named' | 'default' | 'namespace';
 }
 
 export interface Import extends Ident {
@@ -23,10 +23,10 @@ const resolveImportSource = (
   path: string,
   source: string
 ) => {
-  if (source[0] === ".") {
+  if (source[0] === '.') {
     return resolve(dirname(path), source).replace(
       new RegExp(`${rootPath}/?`),
-      "./"
+      './'
     );
   } else {
     return source;
@@ -34,27 +34,27 @@ const resolveImportSource = (
 };
 
 const trackImports = (
-  body: Program["body"],
+  body: Program['body'],
   rootPath: string,
   path: string,
   cb: (imp: Import) => void
 ) => {
   return body.forEach((node) => {
-    if (node.type === "ImportDeclaration") {
-      if (typeof node.source.value == "string") {
+    if (node.type === 'ImportDeclaration') {
+      if (typeof node.source.value == 'string') {
         for (const specifier of node.specifiers) {
           let ident;
           let kind;
 
-          if (specifier.type === "ImportSpecifier") {
+          if (specifier.type === 'ImportSpecifier') {
             ident = specifier.imported.name;
-            kind = "named" as const;
-          } else if (specifier.type === "ImportDefaultSpecifier") {
+            kind = 'named' as const;
+          } else if (specifier.type === 'ImportDefaultSpecifier') {
             ident = specifier.local.name;
-            kind = "default" as const;
+            kind = 'default' as const;
           } else {
             ident = specifier.local.name;
-            kind = "namespace" as const;
+            kind = 'namespace' as const;
           }
 
           cb({
@@ -83,11 +83,17 @@ export const parsePath = async (
   path: string,
   counter = new Counter()
 ) => {
-  const sourceCode = await readFile(path, "utf8");
+  const sourceCode = await readFile(path, 'utf8');
+  // eslint-disable-next-line no-useless-escape
+  const importSourceCode = sourceCode
+    .match(/import (?![\(\/])(?! type)(?! React)([\s\S]*?)(?=;).*/g)
+    ?.join('');
 
-  const root = Parser.parse(sourceCode, {
-    ecmaVersion: "latest",
-    sourceType: "module",
+  console.error(`path:"${path}"\n${importSourceCode}\n\n`);
+
+  const root = Parser.parse(importSourceCode ? importSourceCode : '', {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   }) as unknown as Program;
 
   trackImports(root.body, rootPath, path, (imp) =>

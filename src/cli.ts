@@ -1,17 +1,17 @@
-import { normalize, resolve, sep } from "path";
-import { Command } from "commander";
+import { normalize, resolve, sep } from 'path';
+import { Command } from 'commander';
 
-import glob from "glob";
+import glob from 'glob';
 
-import Counter from "./count";
+import Counter from './count';
 import {
   filesAsJson,
   filesAsText,
   importsAsJson,
   importsAsText,
-} from "./format";
-import { parsePaths } from "./parse";
-import { sortFiles, sortImports } from "./sort";
+} from './format';
+import { parsePaths } from './parse';
+import { sortFiles, sortImports } from './sort';
 
 const withCounter = async <Item>(
   rawRootPath: string,
@@ -26,9 +26,14 @@ const withCounter = async <Item>(
       : normalizedRootPath;
 
   glob(
-    `${rootPath}/**/*.js{,x}`,
+    `${rootPath}/**/*.{t,j}s{,x}`,
     {
-      ignore: [`${rootPath}/**/node_modules/**/*`],
+      ignore: [
+        `${rootPath}/**/coverage/**/*`,
+        `${rootPath}/**/*.test.*`,
+        `${rootPath}/**/node_modules/**/*`,
+        `${rootPath}/**/dist/**/*`,
+      ],
     },
     async (err, paths) => {
       if (err != null) {
@@ -53,7 +58,7 @@ const withCounter = async <Item>(
       const items = getItems(resolvedRootPath, counter);
 
       if (items.length === 0) {
-        console.error("No import statements found.");
+        console.error('No import statements found.');
         process.exit(1);
       } else {
         useItems(items);
@@ -95,32 +100,32 @@ const fewestImports = (rawRootPath: string, options: { json: boolean }) => {
 };
 
 export const run = async (version: string) => {
-  const command = new Command("import-count")
+  const command = new Command('import-count')
     .version(version)
     .showHelpAfterError(true)
     .showSuggestionAfterError(true);
 
   command
-    .command("most-common")
+    .command('most-common')
     .argument(
-      "<dir>",
-      "absolute or relative path to a directory containing JS and/or JSX source files"
+      '<dir>',
+      'absolute or relative path to a directory containing JS and/or JSX source files'
     )
-    .option("--json", "output JSON instead of human-readable text")
+    .option('--json', 'output JSON instead of human-readable text')
     .description(
-      "print each unique import found in <dir> along with its number of occurrences, sorted by most frequently occurring"
+      'print each unique import found in <dir> along with its number of occurrences, sorted by most frequently occurring'
     )
     .action(mostCommon);
 
   command
-    .command("fewest-imports")
+    .command('fewest-imports')
     .argument(
-      "<dir>",
-      "absolute or relative path to a directory containing JS and/or JSX source files"
+      '<dir>',
+      'absolute or relative path to a directory containing JS and/or JSX source files'
     )
-    .option("--json", "output JSON instead of human-readable text")
+    .option('--json', 'output JSON instead of human-readable text')
     .description(
-      "print each file in <dir> with its number of imports, sorted by fewest imports"
+      'print each file in <dir> with its number of imports, sorted by fewest imports'
     )
     .action(fewestImports);
 
