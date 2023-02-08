@@ -86,10 +86,10 @@ export const parsePath = async (
   const sourceCode = await readFile(path, 'utf8');
   const importSourceCode = sourceCode
     // eslint-disable-next-line no-useless-escape
-    .match(/import (?![\(\/])(?! type)(?! React)([\s\S]*?)(?=;).*/g)
+    .match(/import (?![\(\/])(?!type)(?!React)([\s\S]*?)(?=;).*/g)
     ?.join('');
 
-  console.error(`path:"${path}"\n${importSourceCode}\n\n`);
+  // console.error(`path:"${path}"\n${importSourceCode}\n\n`);
 
   const root = Parser.parse(importSourceCode ? importSourceCode : '', {
     ecmaVersion: 'latest',
