@@ -1,10 +1,10 @@
-import type { FileCount, ImportCount } from "./count";
+import type { FileCount, ImportCount } from './count';
 
 export const importsAsText = (importCounts: ImportCount[]) => {
   return importCounts.map((importCount) => {
-    if (importCount.kind === "default") {
+    if (importCount.kind === 'default') {
       return `import ${importCount.ident} from "${importCount.mod}": ${importCount.count}`;
-    } else if (importCount.kind === "namespace") {
+    } else if (importCount.kind === 'namespace') {
       return `import * as ${importCount.ident} from "${importCount.mod}": ${importCount.count}`;
     } else {
       return `import { ${importCount.ident} } from "${importCount.mod}": ${importCount.count}`;
@@ -35,7 +35,7 @@ export const importsAsJson = (importCounts: ImportCount[]) => {
     }
 
     return acc;
-  }, {} as { [mod: string]: Omit<ImportCount, "mod">[] });
+  }, {} as { [mod: string]: Omit<ImportCount, 'mod'>[] });
 
   return JSON.stringify(json);
 };

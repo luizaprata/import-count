@@ -1,4 +1,4 @@
-import type { Ident, Import } from "./parse";
+import type { Ident, Import } from './parse';
 
 interface Count {
   count: number;
@@ -34,7 +34,7 @@ export class Counter {
 
     const sourceCounter = this.#imports[mod] ?? (this.#imports[mod] = {});
 
-    const key = ident + "." + kind;
+    const key = ident + '.' + kind;
 
     const identOccurrence = sourceCounter[key];
 
@@ -55,7 +55,7 @@ export class Counter {
 
       if (count != null) {
         acc.push({
-          path: path.replace(rootPath, "").slice(1),
+          path: path.replace(rootPath, '').slice(1),
           count,
         });
       }

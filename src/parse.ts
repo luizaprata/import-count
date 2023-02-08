@@ -84,8 +84,8 @@ export const parsePath = async (
   counter = new Counter()
 ) => {
   const sourceCode = await readFile(path, 'utf8');
-  // eslint-disable-next-line no-useless-escape
   const importSourceCode = sourceCode
+    // eslint-disable-next-line no-useless-escape
     .match(/import (?![\(\/])(?! type)(?! React)([\s\S]*?)(?=;).*/g)
     ?.join('');
 

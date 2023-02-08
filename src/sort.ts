@@ -1,4 +1,4 @@
-import type { FileCount, ImportCount } from "./count";
+import type { FileCount, ImportCount } from './count';
 
 export const sortImports = (importCounts: ImportCount[]) => {
   return importCounts.sort((a, b) => {
