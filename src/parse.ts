@@ -78,6 +78,8 @@ export const parsePaths = async (rootPath: string, paths: string[]) => {
   return counter;
 };
 
+//https://regex101.com/r/wwMVRP/3
+
 export const parsePath = async (
   rootPath: string,
   path: string,
@@ -86,7 +88,9 @@ export const parsePath = async (
   const sourceCode = await readFile(path, 'utf8');
   const importSourceCode = sourceCode
     // eslint-disable-next-line no-useless-escape
-    .match(/import (?![\(\/])(?!type)(?!React)([\s\S]*?)(?=;).*/g)
+    .match(
+      /^import([ \n\t]*(?:[^ \n\t\{\}]+[ \n\t]*,?)?(?:[ \n\t]*\{(?:[ \n\t]*[^ \n\t"'\{\}]+[ \n\t]*,?)+\})?[ \n\t]*)from[ \n\t]*(['"])([^'"\n]+)(?:['"])/g
+    )
     ?.filter((str) => str.includes('@gupy'))
     .join('');
 
