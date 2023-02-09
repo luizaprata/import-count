@@ -7,6 +7,11 @@ import type { Program } from 'estree';
 
 import Counter from './count';
 
+//https://regex101.com/r/wwMVRP/3
+const pattern = new RegExp(
+  /^import([ \n\t]*(?:[^ \n\t{}]+[ \n\t]*,?)?(?:[ \n\t]*\{(?:[ \n\t]*[^ \n\t"'{}]+[ \n\t]*,?)+\})?[ \n\t]*)from[ \n\t]*(['"])([^'"\n]+)(?:['"])/gm
+);
+
 export interface Ident {
   ident: string;
   kind: 'named' | 'default' | 'namespace';
@@ -78,8 +83,6 @@ export const parsePaths = async (rootPath: string, paths: string[]) => {
   return counter;
 };
 
-//https://regex101.com/r/wwMVRP/3
-
 export const parsePath = async (
   rootPath: string,
   path: string,
@@ -87,14 +90,11 @@ export const parsePath = async (
 ) => {
   const sourceCode = await readFile(path, 'utf8');
   const importSourceCode = sourceCode
-    .match(
-      // eslint-disable-next-line no-useless-escape
-      /^import([ \n\t]*(?:[^ \n\t\{\}]+[ \n\t]*,?)?(?:[ \n\t]*\{(?:[ \n\t]*[^ \n\t"'\{\}]+[ \n\t]*,?)+\})?[ \n\t]*)from[ \n\t]*(['"])([^'"\n]+)(?:['"])/g
-    )
+    .match(pattern)
     ?.filter((str) => str.includes('@gupy'))
-    .join('');
+    .join(';');
 
-  console.error(`>"${path}"\n${importSourceCode}\n\n`);
+  console.error(`${path}\n${importSourceCode}\n\n`);
 
   const root = Parser.parse(importSourceCode ? importSourceCode : '', {
     ecmaVersion: 'latest',
