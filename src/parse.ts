@@ -87,8 +87,8 @@ export const parsePath = async (
 ) => {
   const sourceCode = await readFile(path, 'utf8');
   const importSourceCode = sourceCode
-    // eslint-disable-next-line no-useless-escape
     .match(
+      // eslint-disable-next-line no-useless-escape
       /^import([ \n\t]*(?:[^ \n\t\{\}]+[ \n\t]*,?)?(?:[ \n\t]*\{(?:[ \n\t]*[^ \n\t"'\{\}]+[ \n\t]*,?)+\})?[ \n\t]*)from[ \n\t]*(['"])([^'"\n]+)(?:['"])/g
     )
     ?.filter((str) => str.includes('@gupy'))
